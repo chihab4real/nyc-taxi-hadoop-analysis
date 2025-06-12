@@ -1,0 +1,57 @@
+version: "2"
+services:
+  namenode:
+    image: apache/hadoop:3
+    hostname: namenode
+    command: ["hdfs", "namenode"]
+    ports:
+      - "9870:9870"  # HDFS Web UI
+    env_file:
+      - ./config
+    environment:
+      ENSURE_NAMENODE_DIR: "/tmp/hadoop-root/dfs/name"
+    volumes:
+      - hadoop_namenode:/hadoop/dfs/name
+      - ./shared:/shared  # To upload files
+
+  datanode1:
+    image: apache/hadoop:3
+    hostname: datanode1
+    command: ["hdfs", "datanode"]
+    env_file:
+      - ./config
+    volumes:
+      - hadoop_datanode:/hadoop/dfs/data
+
+  resourcemanager:
+    image: apache/hadoop:3
+    hostname: resourcemanager
+    command: ["yarn", "resourcemanager"]
+    ports:
+      - "8088:8088"  # YARN ResourceManager UI
+    env_file:
+      - ./config
+
+  nodemanager1:
+    image: apache/hadoop:3
+    hostname: nodemanager1
+    command: ["yarn", "nodemanager"]
+    env_file:
+      - ./config
+
+  jupyter:
+    image: jupyter/pyspark-notebook
+    container_name: spark-jupyter
+    hostname: jupyter
+    ports:
+      - "8888:8888"
+      - "8501:8501"  # For Spark UI
+    volumes:
+      - ./shared:/home/jovyan/shared
+      - ./notebooks:/home/jovyan/work
+    environment:
+      - SPARK_OPTS=--conf spark.hadoop.fs.defaultFS=hdfs://namenode:9000
+
+volumes:
+  hadoop_namenode:
+  hadoop_datanode:
