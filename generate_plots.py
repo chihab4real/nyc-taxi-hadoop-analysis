@@ -27,8 +27,8 @@ for file in parquet_files:
     subprocess.run(["python", local_script, file])
 
 # ================================================
-# ⬇️ Now merge all data and generate combined plots
-# ================================================
+# Merge all data and generate combined plots
+
 
 print("📦 Merging all Parquet files...")
 
