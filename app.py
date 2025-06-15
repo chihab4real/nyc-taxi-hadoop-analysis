@@ -4,6 +4,9 @@ import os
 import re
 from datetime import datetime
 import json
+import joblib
+from datetime import datetime
+
 
 st.set_page_config(page_title="NYC Taxi Analysis", layout="wide")
 st.title("NYC Taxi Data Analysis 2024")
@@ -18,6 +21,46 @@ def extract_month_label(folder_name):
         dt = datetime.strptime(f"{year}-{month}", "%Y-%m")
         return dt.strftime("%b %Y")  # e.g. "Jan 2024"
     return folder_name
+
+@st.cache_resource
+def load_recommendation_model():
+    return joblib.load("pickup_time_recommendation_by_day.pkl")
+
+recs = load_recommendation_model()
+
+st.markdown("### Pickup Time Recommendation (Less Busy Hours)")
+
+date_input = st.text_input(
+    "Enter a date (day and month) in DD/MM format:",
+    placeholder="e.g. 15/03",
+    key="pickup_date_input"
+)
+
+def recommend_pickup_times(date_str):
+    try:
+        dt = datetime.strptime(date_str, "%d/%m")
+    except ValueError:
+        return None, None, "Invalid date format. Please enter date as DD/MM (e.g. 15/03)."
+    
+    weekday = dt.strftime("%a")  # 'Mon', 'Tue', ...
+    day_info = recs.get(weekday, {})
+    best_hours = day_info.get("best_hours", [])  # less demand hours
+    worst_hours = day_info.get("worst_hours", [])  # more demand hours
+    return best_hours, worst_hours, None
+
+if date_input:
+    best_hours, worst_hours, error = recommend_pickup_times(date_input)
+
+    if error:
+        st.error(error)
+    else:
+        if best_hours and worst_hours:
+            st.markdown(f"**For date {date_input} (a {datetime.strptime(date_input, '%d/%m').strftime('%A')}):**")
+            st.markdown(f"- Best pickup hours (less demand): {', '.join(str(h) + ':00' for h in worst_hours)}")
+            st.markdown(f"- Worst pickup hours (more demand): {', '.join(str(h) + ':00' for h in best_hours)}")
+        else:
+            st.warning("No recommendation data available for this date.")
+
 
 # Find all saved plot folders
 plot_base_dir = "./saved_plots"
@@ -118,7 +161,7 @@ with st.spinner(f"Loading plots for {st.session_state.selected_month}..."):
         "Heatmap of Average Fare by Hour and Day", 
         "Tip Distribution Across Payment Methods",
         "Hourly Average Speed of Taxis",
-        "Pickup & Dropoff Map"
+        "Pickup & Dropoff Map",
     ])
 
     with tabs[0]:
@@ -144,3 +187,6 @@ with st.spinner(f"Loading plots for {st.session_state.selected_month}..."):
     with tabs[5]:
         st.subheader("Pickup and Dropoff Location Map")
         load_plot_html(plots_folder, "pickup_dropoff_map.html", height=650)
+
+ 
+

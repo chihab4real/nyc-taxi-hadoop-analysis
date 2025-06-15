@@ -26,8 +26,11 @@ for file in parquet_files:
     print(f"📊 Generating plots for {file}...")
     subprocess.run(["python", local_script, file])
 
+
+
+
 # ================================================
-# Merge all data and generate combined plots
+# Now merge all data and generate combined plots
 
 
 print("📦 Merging all Parquet files...")
@@ -179,3 +182,7 @@ with open(os.path.join(base_dir, "summary.json"), "w") as f:
 
 print(f"✅ Combined summary saved to: {os.path.join(base_dir, 'summary.json')}")
 spark.stop()
+
+
+
+subprocess.run(["python", train_recommender.py])
