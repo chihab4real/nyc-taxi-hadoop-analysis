@@ -1,6 +1,28 @@
 # NYC Taxi Data Hadoop Analysis with Dashboard
 
+![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)
+![Apache Spark](https://img.shields.io/badge/Apache%20Spark-3.5.0-orange.svg)
+![Hadoop](https://img.shields.io/badge/Apache%20Hadoop-3.0+-yellow.svg)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.29.0-red.svg)
+![Docker](https://img.shields.io/badge/Docker-20.0+-blue.svg)
+![License](https://img.shields.io/badge/License-MIT-green.svg)
+
+## 🚕 Project Overview
+
+This project demonstrates **end-to-end big data analytics** using NYC Taxi trip data. It showcases the complete data pipeline from raw data processing through Apache Hadoop and Spark to interactive visualization dashboards. The project processes millions of taxi trip records to generate insights about transportation patterns, fare analysis, and geographical usage trends.
+
+**Key Highlights:**
+- **Big Data Processing**: Handles large-scale taxi trip data using Apache Hadoop HDFS and Apache Spark
+- **Interactive Dashboard**: Real-time data exploration through Streamlit web application
+- **Geospatial Analysis**: Location-based insights using Folium maps and GeoJSON data
+- **Time Series Analytics**: Hourly, daily, and monthly trend analysis
+- **Containerized Deployment**: Full Docker-based infrastructure for reproducible deployment
+
 This project provides an interactive dashboard for exploring New York City taxi trip data. It includes various visualizations like hourly trip distribution, weekly trends, average fare heatmaps, tip patterns, and spatial maps of pickups and dropoffs. The app is built using Streamlit and powered by PySpark for efficient large-scale data processing.
+
+## 🚀 Live Demo
+
+> **Note**: Due to the large dataset size and infrastructure requirements, this project runs locally with Docker. Follow the [setup instructions](#how-to-run) below to run the dashboard on your machine.
 
 ## Screenshots
 
@@ -10,11 +32,38 @@ This project provides an interactive dashboard for exploring New York City taxi 
 ### Hourly Trip Distribution
 ![Hourly Analysis](screenshots/hourly_dist.png)
 
-### Average Fare bt Hour and Day Heatmap
+### Average Fare by Hour and Day Heatmap
 ![Fare Heatmap](screenshots/avg_fare.png)
 
 ### Pickup/DropOff Map
 ![Map Analysis](screenshots/geo_map.png)
+
+## 🛠️ Technical Skills Demonstrated
+
+This project showcases proficiency in:
+
+**Big Data Technologies:**
+- Apache Hadoop HDFS - Distributed file system management
+- Apache Spark (PySpark) - Large-scale data processing and analytics
+- Parquet format - Efficient columnar data storage
+
+**Data Science & Analytics:**
+- Exploratory Data Analysis (EDA)
+- Time series analysis and pattern recognition
+- Geospatial data processing and visualization
+- Statistical aggregations and business intelligence
+
+**Software Engineering:**
+- Containerization with Docker and Docker Compose
+- RESTful web application development
+- Code organization and project structure
+- Version control and collaborative development
+
+**Data Visualization:**
+- Interactive dashboards with Streamlit
+- Advanced plotting with Plotly
+- Geospatial mapping with Folium
+- Real-time data visualization
 
 ## Technologies Used
 
@@ -58,13 +107,25 @@ The NYC Taxi data contains columns such as:
 
 Additional fields may be present depending on the dataset version.
 
-## Features
+## ✨ Features
 
-- Hourly and weekly usage analysis
-- Fare and tip insights across payment methods
-- Interactive heatmaps and folium-based location maps
-- Monthly or full-year selection for filtered analysis
-- Summary statistics display (trip count, fare, speed, etc.)
+### 📊 **Data Analytics Dashboard**
+- **Temporal Analysis**: Hourly and weekly usage patterns with interactive visualizations
+- **Financial Insights**: Fare and tip analysis across different payment methods
+- **Geospatial Mapping**: Interactive maps showing pickup/dropoff locations with clustering
+- **Performance Metrics**: Speed analysis and trip efficiency calculations
+
+### 🔍 **Advanced Analytics**
+- **Time-based Filtering**: Monthly or full-year data selection for comparative analysis
+- **Statistical Summary**: Comprehensive trip statistics (count, average fare, speed, tips)
+- **Pattern Recognition**: Peak hours identification and demand forecasting
+- **Recommendation System**: Optimal pickup time suggestions based on historical data
+
+### 🎯 **Interactive Features**
+- **Real-time Dashboard**: Responsive Streamlit interface with multiple visualization tabs
+- **Data Filtering**: Dynamic month selection and data subset analysis
+- **Export Capabilities**: Pre-computed visualizations stored as HTML files
+- **Scalable Architecture**: Designed to handle large datasets efficiently
 
 ## Challenges Encountered
 
@@ -131,29 +192,42 @@ streamlit run app.py
 
 Then open in your browser: http://localhost:8501/
 
-## Folder Structure
+## 📁 Folder Structure
 
 ```
 nyc-taxi-hadoop-analysis/
-├── shared/
-│   └── data/               # Raw parquet files
-├── saved_plots/
-│   └── YYYY-MM/            # HTML plots and summary for each month
-├── notebooks/
-│   └── analysis.ipynb      
-├── screenshots/            # Dashboard screenshots
-├── get_plots_month.py      # Spark-based preprocessing and visualization generator for 1 month
+├── app.py                  # Streamlit dashboard application
+├── requirements.txt        # Python dependencies
+├── docker-compose.yml      # Docker orchestration configuration
 ├── generate_plots.py       # Visualization generator for all months
-├── app.py                  # Streamlit dashboard
-├── docker-compose.yml
-├── config/
-└── README.md
+├── get_plots_month.py      # Spark-based preprocessing for single month
+├── train_recommender.py    # Machine learning model for recommendations
+├── config/                 # Hadoop configuration files
+├── data/                   # Static data files (zones, lookups)
+│   ├── taxi_zone_lookup.csv
+│   ├── taxi_zones.csv
+│   └── zones.geojson
+├── notebooks/              # Jupyter notebooks for analysis
+│   └── analysis.ipynb      
+├── saved_plots/            # Pre-computed visualizations
+│   ├── all/                # Combined yearly analysis
+│   └── yellow_tripdata_2024-XX/  # Monthly analysis folders
+├── screenshots/            # Dashboard screenshots
+├── shared/                 # Docker volume for data sharing
+│   └── data/              # Raw parquet files
+└── README.md              # Project documentation
 ```
 
 ## Requirements
 
+Install Python dependencies:
 ```bash
-pip install streamlit pandas geopandas pyspark plotly folium
+pip install -r requirements.txt
+```
+
+Or manually install individual packages:
+```bash
+pip install streamlit pandas geopandas pyspark plotly folium numpy joblib
 ```
 
 ## System Requirements
@@ -197,6 +271,24 @@ pip install streamlit pandas geopandas pyspark plotly folium
 
 - [NYC Taxi & Limousine Commission Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
 - NYC Taxi Zone Shapefiles for geographic mapping
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📈 Future Enhancements
+
+- **Real-time Data Integration**: Connect to live taxi data streams
+- **Machine Learning Models**: Predictive analytics for demand forecasting
+- **Advanced Visualizations**: 3D mapping and enhanced geospatial analysis
+- **Performance Optimization**: Query optimization and caching strategies
+- **Mobile-Responsive Design**: Enhanced mobile experience for the dashboard
 
 ## License
 
